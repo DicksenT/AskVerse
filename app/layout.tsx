@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import React from "react";
 import Header from "./components/Header";
+import './globals.css';
 export const metadata: Metadata = {
   title: "Chat AI",
 };
@@ -14,7 +15,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Header/>
-        {children}
+        <main className="h-[calc(100vh-71px)]">
+          {children}
+        </main>
       </body>
     </html>
   );
