@@ -13,6 +13,7 @@ const Header = ()=>{
                     <Image src='/menu.svg' alt="Menu Logo" width={32} height={32}/>
                 </button>
             </nav>
+           <Sidebar/>
         </header>
     )
 }
