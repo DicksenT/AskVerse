@@ -13,7 +13,6 @@ const Input = () =>{
        e.preventDefault()
     }
     return(
-        <form className="fixed bottom-6 flex items-end gap-2">
             <textarea className="resize-none border min-h-10 w-full rounded-lg outline-none p-4" name="" id="" placeholder="Ask Me Anything..."></textarea>
         <form className="fixed bottom-6 flex items-end w-full gap-2 px-4 left-0" onSubmit={(e)=> handleSubmit(e)}>
             <textarea 
