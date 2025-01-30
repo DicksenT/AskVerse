@@ -1,10 +1,12 @@
 const { CohereClientV2 } = require('cohere-ai');
 
-const cohere = new CohereClientV2({
-  token: process.env.COHERE_API,
-});
+
 
 export async function GenerateCohere(prompt: string){
+
+  const cohere = new CohereClientV2({
+    token: process.env.COHERE_API,
+  });
     const response = await cohere.chat({
         model: 'command-r-plus',
         messages: [
@@ -14,7 +16,7 @@ export async function GenerateCohere(prompt: string){
           },
         ],
       });
-    
-    return response.messages.content[0].text
+  
+    return response.message.content[0].text
 }
 

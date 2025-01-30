@@ -12,5 +12,5 @@ const msg = await anthropic.messages.create({
   messages: [{ role: "user", content: prompt }],
 });
 const text = (msg.content[0] as Anthropic.TextBlock).text;
-console.log(text);
+return text
 }
