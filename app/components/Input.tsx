@@ -1,6 +1,11 @@
 'use client'
 import Image from "next/image"
 import React, { useEffect, useRef, useState } from "react"
+import { GenerateCohere } from "../api/Cohere"
+import { GenerateDeepSeek } from "../api/DeepSeek"
+import { GenerateGemini } from "../api/Gemini"
+import { GenerateOpenAI } from "../api/OpenAI"
+import { GenerateClaude } from "../api/Claude"
 const Input = () =>{
     const [text, setText] = useState<string>('')
     const textRef = useRef(null)
@@ -11,6 +16,13 @@ const Input = () =>{
     }
     const handleSubmit = async(e) =>{
        e.preventDefault()
+       await Promise.all([
+        GenerateClaude(text),
+        GenerateCohere(text),
+        GenerateDeepSeek(text),
+        GenerateGemini(text),
+        GenerateOpenAI(text)
+       ])
     }
     return(
         <form className="fixed bottom-6 flex items-end w-full gap-2 px-4 left-0" onSubmit={(e)=> handleSubmit(e)}>
