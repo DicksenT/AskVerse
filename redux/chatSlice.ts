@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { messageStructure, chatState, chatStructure } from "../app/interface";
+import { messageStructure, chatState, chatStructure, responseStructure } from "../app/interface";
 
 
 
@@ -35,9 +35,12 @@ const chatSlice= createSlice({
         addMessages:(state, action: PayloadAction<messageStructure>)=>{
             state.chats[action.payload.chatId].chatListsId.push(action.payload.id)
             state.messages[action.payload.id] = action.payload
+        },
+        addMessagesResponse:(state, action: PayloadAction<{msgId: string, response: responseStructure}>)=>{
+            state.messages[action.payload.msgId].response = action.payload.response
         }
     }
 })
 
-export const{setActiveChat, addNewChat, deleteChat, renameChat, addMessages} = chatSlice.actions
+export const{setActiveChat, addNewChat, deleteChat, renameChat, addMessages, addMessagesResponse} = chatSlice.actions
 export default chatSlice.reducer
