@@ -88,10 +88,9 @@ const Input = () =>{
         
     }
     return(
-        <form className="fixed bottom-0 min-h-20 max-w-3xl t left-1/2 
-                transform -translate-x-1/2 pb-10 bg-white flex items-end w-full gap-2 px-4" onSubmit={(e)=> handleSubmit(e)}>
+        <form className=" min-h-16 max-w-3xl pb-10 bg-white flex items-end w-full gap-2 px-4" onSubmit={(e)=> handleSubmit(e)}>
             <textarea 
-            className="resize-none border rounded-lg outline-none px-4 text-xs w-[calc(100%-40px-8px)] h-10 py-3" name="" id=""
+            className="resize-none border rounded-lg bg-indigo-100 outline-none px-4 text-xs w-[calc(100%-40px-8px)] h-10 py-3" name="" id=""
             placeholder="Ask me anything..."
             onInput={handleInput} 
             value={text}
