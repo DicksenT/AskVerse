@@ -3,30 +3,49 @@ import React, { useEffect } from "react"
 import { setActiveMenu, setProfileSetting } from "../../redux/sidebarSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState, AppDispatch } from "../../redux/store"
-const Sidebar = () =>{
+import Link from "next/link"
+
+interface sideBarProps{
+   width: number
+}
+
+const Sidebar:React.FC<sideBarProps> = ({width}) =>{
    const appDispatch = () => useDispatch<AppDispatch>()
    const dispatch = appDispatch()
    const sidebarActive = useSelector((state: RootState) => state.sidebar.activeMenu)
+   const chats = useSelector((state: RootState) => Object.entries(state.chats.chats))
+   
+   const[chatOption, setChatOption] = useState<boolean>(false)
+   const ellipsisRef = useRef(null)
    useEffect(() =>{
-      
-   },[sidebarActive])
+      const handleClick = (e)=>{
+         if(ellipsisRef.current && !ellipsisRef.current.contains(e.target)){
+            setChatOption(false)
+         }
+      }
+      window.addEventListener('click', handleClick)
+      return ()=>{window.removeEventListener('click', handleClick)}
+   },[])
  return(
    //background
-   <div className={`bg-black bg-opacity-50 h-screen z-10 absolute top-0 left-0 w-screen  
-                  transition-all duration-500 ease-in-out
-                  ${sidebarActive ? '-translate-x-full' : 'translate-x-0'}`}>
+   <div className={`bg-black bg-opacity-50 h-screen  top-0 left-0
+                  transition-all duration-500 ease-in-out z-50
+                  ${sidebarActive ?  'translate-x-0' : '-translate-x-full'}
+                  ${width > 768 ? 'w-[35%] translate-x-0' : 'absolute  w-screen'}`}>
       <aside className={`h-screen z-20 bg-white opacity-100 py-6 px-4 flex flex-col justify-between
               transition-all duration-1000 ease-in-out
-              w-[80%]`}>
+              ${width > 768? 'w-full border-r' : 'w-[80%]'}`}>
          <nav className="py-4">
             <div className="flex justify-between pb-4 px-1">
                <div className="flex">
                   <Image src='/chatLogo.svg' alt="chat logo" width={20} height={20}/>
                   <h1 className="font-bold ml-2">Chat AI</h1>
                </div>
+               {width <=768 &&
                <button onClick={() => dispatch(setActiveMenu())}>
                   <Image src='/close.svg' alt="close button" width={20} height={20}/>
-               </button>
+               </button>}
+               
             </div>
 
             <h4 className="text-neutral-600 font-semibold">Past Chats</h4>
