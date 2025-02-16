@@ -22,11 +22,16 @@ export default function ProvidedComponent({children}: {children: React.ReactNode
     },[width])
     return(
         <Provider store={store}>
-            <Header/>
-            <main className="h-[calc(100vh-71px)] pt-12 pb-24 px-4 overflow-y-auto">
-                {children}
-            </main>
-            <Input/>
+            {width <= 768 &&  <Header/> }
+            <div className="flex h-screen">
+            <Sidebar width={width}/>
+                <main className={`${width <= 768 ?'h-[calc(100vh-71px)] ' : "h-screen"} flex-1 items-center px-4 overflow-y-auto pt-12 pb-24 `}>
+                    {children}
+                    <Input/>
+                </main>
+            </div>
+     
+            
         </Provider>
     )
 }
