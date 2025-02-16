@@ -10,7 +10,5 @@ export async function GenerateOpenAI(prompt: string){
     store: false,
     temperature: 0.7
 });
-console.log(completion)
-console.log('OpenAI result: '+ completion.choices[0].message.content)
 return (completion.choices[0].message.content);
 }
