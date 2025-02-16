@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import { Response } from "./components/Response";
 
 interface Feature{
   name:string;
@@ -34,17 +35,16 @@ const features: Feature[] =[
     "bgColor": "bg-amber-50"
   }
 ]
-
 export default function Home() {
   return (
-    <section>
+    <section className="max-w-3xl">
       <h3 className="text-2xl mb-16">
         <span className="font-bold ">
           Hi, I'm Chat AI &nbsp;
         </span>
          Your AI assistant and companion
       </h3>
-      <ul className="flex flex-wrap gap-4 self-stretch justify-center">
+      <ul className="flex flex-wrap gap-4 justify-center">
         {features.map((feature, i) =>(
           <li key={i} className="w-[180px] flex flex-col gap-6 p-4 rounded-lg border border-solid border-neutral-200">
             <div className={`flex justify-center items-center w-12 h-12 p-2 rounded-lg ${feature.bgColor}`}>
