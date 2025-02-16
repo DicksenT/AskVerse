@@ -8,7 +8,6 @@ import { Loading } from "../components/Loading"
 import { Response } from "../components/Response"
 
 const ChatPage = () =>{
-    const {chatId} = useParams()
     const pathname = usePathname()
     const dispatch = useDispatch<AppDispatch>()
     useEffect(() =>{
