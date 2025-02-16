@@ -6,9 +6,21 @@ import { GenerateDeepSeek } from "../api/DeepSeek"
 import { GenerateGemini } from "../api/Gemini"
 import { GenerateOpenAI } from "../api/OpenAI"
 import { GenerateClaude } from "../api/Claude"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "../../redux/store"
+import { addMessages, addMessagesResponse, addNewChat, setActiveChat } from "../../redux/chatSlice"
+import { chatStructure, messageStructure, responseStructure } from "../interface"
+import { usePathname, useRouter } from "next/navigation"
 const Input = () =>{
+    const pathname = usePathname()
+    const router = useRouter()
+    const dispatch = useDispatch<AppDispatch>()
+    const activeChat = useSelector((state: RootState) => state.chats.activeChat)
+    const stateChat = useSelector((state: RootState) => state.chats)
     const [text, setText] = useState<string>('')
     const textRef = useRef(null)
+    //dynamically adjust text area height
+   
     const handleInput = (e) =>{
         setText(e.currentTarget.value)
         textRef.current.style.height = '40px'
