@@ -1,5 +1,5 @@
 import Image from "next/image"
-import React, { useEffect } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { setActiveMenu, setProfileSetting } from "../../redux/sidebarSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState, AppDispatch } from "../../redux/store"
