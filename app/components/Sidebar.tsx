@@ -32,22 +32,38 @@ const Sidebar = () =>{
             <h4 className="text-neutral-600 font-semibold">Past Chats</h4>
 
             <ul>
-               <li className="flex gap-3 items-center px-2 h-8">
-                  <Image src={`/file-inactive.svg`} alt="file logo" width={20} height={20}/>
-                  <p className="w-[calc(100%-20px-12px)] text-ellipsis overflow-hidden whitespace-nowrap">API Integration texasdasd</p>
-               </li>
-               <li className="flex gap-3 items-center px-2 h-8 active text-indigo-700 bg-neutral-50 rounded-lg">
-                  <Image src={`/file-active.svg`} alt="file logo" width={20} height={20}/>
-                  <p className="w-[calc(100%-20px-12px)] text-ellipsis overflow-hidden whitespace-nowrap">API Integration texasdasd</p>
-               </li>
+               {chats.map(([_, chat], i) => (
+                  <Link href={`/${chat.id}`} key={i}>
+                  <li className="flex gap-3 items-center px-2 h-8">
+                     <Image src={`/file-inactive.svg`} alt="file logo" width={20} height={20}/>
+                     <p className="w-[calc(100%-20px-24px)] text-clip overflow-hidden whitespace-nowrap font-semibold">{chat.name}</p>
+                     <div className="relative"  ref={ellipsisRef}>
+                        <Image src={'/ellipsis.svg'} alt="ellipsis logo" width={20} height={20} 
+                        onClick={() => setChatOption(!chatOption)} className="pointer"/>
+                        {chatOption && <div className="absolute flex flex-col bg-indigo-100 text-xs font-bold py-2 px-1 gap-3 rounded-xl w-24 -left-4">
+                           <button className="flex items-center px-2 py-2 rounded-lg hover:bg-indigo-50">
+                              <Image src='/pencil-line.svg' alt="rename logo" width={20} height={20}/>
+                              Rename
+                           </button>
+                           <button className="text-red-500 flex items-center  px-2 py-2 rounded-lg hover:bg-indigo-50">
+                              <Image src='delete-bin-line.svg' alt="delete logo" width={20} height={20}/>
+                              Delete
+                           </button>
+                        </div>}
+                     </div>
+                  </li>
+                  </Link>
+               ))}
             </ul>
          </nav>
 
          <div className="">
+            <Link href={'/'} onClick={() => dispatch(setActiveMenu())}>
             <button className="flex gap-1 items-center w-full px-3.5 py-2.5 rounded border-[0.5px] border-solid border-neutral-200">
                <Image src='/start-chat.svg' alt="Start chat logo" width={20} height={20}/>
                Start new chat
             </button>
+            </Link>
             <div className="flex items-center px-3.5 py-2.5 justify-between">
                John Doe
                <button>
