@@ -31,7 +31,7 @@ const Sidebar:React.FC<sideBarProps> = ({width}) =>{
    <div className={`bg-black bg-opacity-50 h-screen  top-0 left-0
                   transition-all duration-500 ease-in-out z-50
                   ${sidebarActive ?  'translate-x-0' : '-translate-x-full'}
-                  ${width > 768 ? 'w-[35%] translate-x-0' : 'absolute  w-screen'}`}>
+                  ${width > 768 ? 'w-[25%] translate-x-0' : 'absolute  w-screen'}`}>
       <aside className={`h-screen z-20 bg-white opacity-100 py-6 px-4 flex flex-col justify-between
               transition-all duration-1000 ease-in-out
               ${width > 768? 'w-full border-r' : 'w-[80%]'}`}>
