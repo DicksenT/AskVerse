@@ -1,12 +1,13 @@
 export interface responseStructure{
-    openAIResponse: string | null
-    geminiResponse: string | null
-    cohereResponse: string | null
-    deepseekResponse: string | null
-    claudeResponse: string | null
+    OpenAI: string | null
+    Gemini: string | null
+    Cohere: string | null
+    DeepSeek: string | null
+    Claude: string | null
+    isLoading: boolean
 }
 
-export interface chatListStructure{
+export interface messageStructure{
     id: string
     question:string
     chatId: string
@@ -22,5 +23,5 @@ export interface chatStructure{
 export interface chatState{
     activeChat: string
     chats: Record<string,chatStructure>
-    messages: Record<string, chatListStructure>
+    messages: Record<string, messageStructure>
 }
