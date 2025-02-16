@@ -19,7 +19,24 @@ const ChatPage = () =>{
     
     const messages = useSelector((state: RootState) => chat ?  chat.chatListsId.map(id => state.chats.messages[id]) : []) 
     return(
-        <>**HELLO**</>
+        <ul className="w-full flex flex-col gap-4">
+            
+           {messages ? 
+           messages.map((msg,i)=>(
+            <li key={i} className="flex flex-col w-full items-end gap-4">
+                <p className="bg-gray-50 p-2 w-1/2 rounded-md">{msg.question}</p>
+                <div className="w-full border rounded-md p-3">
+                    {msg.response.isLoading ? 
+                    <Loading/> 
+                    :
+                    <Response result={msg.response}/>
+               
+                }</div>
+            </li>)) 
+            :
+           (<p> lost</p>)}
+            
+        </ul>
     )
 }
 export default ChatPage
