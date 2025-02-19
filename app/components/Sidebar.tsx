@@ -37,10 +37,12 @@ const Sidebar:React.FC<sideBarProps> = ({width}) =>{
               ${width > 768? 'w-full border-r' : 'w-[80%]'}`}>
          <nav className="py-4">
             <div className="flex justify-between pb-4 px-1">
+               <Link href={'/'}>
                <div className="flex">
                   <Image src='/chatLogo.svg' alt="chat logo" width={20} height={20}/>
                   <h1 className="font-bold ml-2">Chat AI</h1>
                </div>
+               </Link>
                {width <=768 &&
                <button onClick={() => dispatch(setActiveMenu())}>
                   <Image src='/close.svg' alt="close button" width={20} height={20}/>
