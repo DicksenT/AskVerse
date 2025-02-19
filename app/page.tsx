@@ -37,7 +37,7 @@ const features: Feature[] =[
 ]
 export default function Home() {
   return (
-    <section className="max-w-3xl">
+    <section>
       <h3 className="text-2xl mb-16">
         <span className="font-bold ">
           Hi, I'm Chat AI &nbsp;
