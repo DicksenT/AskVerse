@@ -1,6 +1,9 @@
 'use client'
 import React, { useEffect, useRef, useState } from "react";
 import { responseStructure } from "../interface";
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 interface responseProps{
     result: responseStructure
@@ -8,7 +11,7 @@ interface responseProps{
 export const Response:React.FC<responseProps>= ({result})=>{
     const [model, setModel] = useState('select')
     return(
-        <div className="">
+        <div className="w-full">
             <div className="flex items-center gap-4 border-b pb-3 justify-center">
                 <div className="relative group">
                 <button className="border py-1 px-3 w-24" >
@@ -23,7 +26,10 @@ export const Response:React.FC<responseProps>= ({result})=>{
                 </div>
                 Response
             </div>
-            <p className="pt-4">{result[model]}</p>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} 
+            className="prose max-w-full overflow-x-auto text-gray-800 text-clip">
+                {result[model]}
+            </ReactMarkdown>
         </div>
     )
 }
