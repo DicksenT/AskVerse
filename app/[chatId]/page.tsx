@@ -6,6 +6,7 @@ import { AppDispatch, RootState } from "../../redux/store"
 import { setActiveChat } from "../../redux/chatSlice"
 import { Loading } from "../components/Loading"
 import { Response } from "../components/Response"
+import { LostPage } from "../components/404"
 
 const ChatPage = () =>{
     const pathname = usePathname()
@@ -16,10 +17,9 @@ const ChatPage = () =>{
     },[pathname])
     const chat = useSelector((state: RootState) => state.chats.chats[pathname.slice(1,)])
     
-    const messages = useSelector((state: RootState) => chat ?  chat.chatListsId.map(id => state.chats.messages[id]) : []) 
+    const messages = useSelector((state: RootState) => chat ?  chat.chatListsId.map(id => state.chats.messages[id]) : null) 
     return(
         <ul className="w-full flex flex-col gap-4">
-            
            {messages ? 
            messages.map((msg,i)=>(
             <li key={i} className="flex flex-col w-full items-end gap-4">
@@ -33,8 +33,7 @@ const ChatPage = () =>{
                 }</div>
             </li>)) 
             :
-           (<p> lost</p>)}
-            
+            <LostPage/>}
         </ul>
     )
 }
