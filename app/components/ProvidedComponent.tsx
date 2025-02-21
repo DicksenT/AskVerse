@@ -17,16 +17,14 @@ export default function ProvidedComponent({children}: {children: React.ReactNode
         window.addEventListener('resize', handleResize)
         return()=>{window.removeEventListener('resize', handleResize)}
     },[])
-    useEffect(() =>{
-        console.log(width)
-    },[width])
+
     return(
         <Provider store={store}>
             {width <= 768 &&  <Header/> }
             <div className={`flex ${width <= 768 ?'h-[calc(100vh-71px)] ' : "h-screen"}`}>
             <Sidebar width={width}/>
                 <main className={`h-full flex-1 flex flex-col items-center px-4 overflow-y-auto`}>
-                    <section className="flex-1 overflow-y-auto max-h-screen pt-10">{children}</section>
+                    <section className="flex-1 overflow-y-auto max-h-screen pt-10 w-full max-w-2xl">{children}</section>
                     <Input/>
                 </main>
             </div>           
