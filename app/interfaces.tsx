@@ -4,7 +4,7 @@ export interface responseStructure{
     Cohere: string | null
     DeepSeek: string | null
     Claude: string | null
-    isLoading: boolean
+    isLoading?: boolean
 }
 
 export interface messageStructure{
