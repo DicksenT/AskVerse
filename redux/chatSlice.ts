@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { messageStructure, chatState, chatStructure, responseStructure } from "../app/interface";
+import { messageStructure, chatState, chatStructure, responseStructure } from "../app/interfaces";
 
 
 
