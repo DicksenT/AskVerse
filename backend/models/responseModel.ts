@@ -2,7 +2,7 @@ import {Schema, model, Document, Types} from 'mongoose'
 
 export interface IResponse extends Document{
     _id: Types.ObjectId
-    messageId: Types.ObjectId
+    msgId: Types.ObjectId
     OpenAI: string | null
     Gemini: string | null
     Cohere: string | null
@@ -11,7 +11,7 @@ export interface IResponse extends Document{
 }   
 
 const responseScheme = new Schema<IResponse>({
-    messageId:{type: Schema.Types.ObjectId, required: true},
+    msgId:{type: Schema.Types.ObjectId, required: true},
     OpenAI:{type: String, default: null},
     Gemini:{type: String, default: null},
     Cohere:{type: String, default: null},
