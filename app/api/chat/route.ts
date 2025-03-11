@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createChat } from "../../../backend/controllers/chatControllers";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { requireAuth } from "../../middleware/requireAuth";
+import { createChat, getChat } from "../../../backend/controllers/chatControllers";
+import { Types } from "mongoose";
 
+export async function GET(req:NextRequest){
+    try{
+        const auth = await requireAuth(req)
+        if(auth instanceof NextResponse) return auth 
+        const userId = auth.userId
+        const chats = await getChat(new Types.ObjectId(userId))
+        return NextResponse.json({message: 'chats successfully fetched', data: chats}, {status: 200})
+    }catch(error){
+        return NextResponse.json({error: error.message}, {status:400})
+    }
+}
 export async function POST(req: NextRequest){
     try{
         const auth = await requireAuth(req)
