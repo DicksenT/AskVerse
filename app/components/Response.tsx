@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useRef, useState } from "react";
-import { responseStructure } from "../interface";
+import { responseStructure } from "../interfaces";
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';

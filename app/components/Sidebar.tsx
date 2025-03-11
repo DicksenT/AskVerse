@@ -15,6 +15,7 @@ const Sidebar:React.FC<sideBarProps> = ({width}) =>{
    const sidebarActive = useSelector((state: RootState) => state.sidebar.activeMenu)
    const chats = useSelector((state: RootState) => Object.entries(state.chats.chats))
    
+   const [renameActive, setRenameActive] = useState<boolean>(false)
    const[chatOption, setChatOption] = useState<boolean>(false)
    const ellipsisRef = useRef(null)
    useEffect(() =>{
