@@ -20,7 +20,7 @@ export async function POST(req: NextRequest){
         if(auth instanceof NextResponse) return auth
         const userId = auth.userId
         const body = await req.json()
-        const newChat = await createChat(userId, body)
+        const newChat = await createChat(new Types.ObjectId(userId), body.question)
         return NextResponse.json({message: 'Chat Created', chat: newChat}, {status: 201})
     }catch(error){
         return NextResponse.json({error: error.message})
