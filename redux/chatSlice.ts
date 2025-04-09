@@ -1,12 +1,74 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { messageStructure, chatState, chatStructure, responseStructure } from "../app/interfaces";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { chatState, chatStructure } from "../app/interfaces";
+import { apiFetch, getFetch } from "../app/utils/api";
+import { transformChat } from "../app/utils/transformers";
+import { RootState } from "./store";
+import { deleteMessages } from "./messageSlice";
+import { useRouter } from "next/navigation";
 
 
+//add chat dispatch
+export const addChat = createAsyncThunk<
+chatStructure,
+string
+>
+('chats/create', async(name: string, {rejectWithValue}) =>{
+    try{
+        const newChat: chatStructure =  await apiFetch('/api/chat', 'POST', {name}, transformChat)
+        console.log(newChat)
+        if(!newChat) throw new Error('failed to create chat')
+        return newChat
+    }catch(error){
+        return rejectWithValue(error.message || 'unexpected Error')
+    }
+})
+
+
+//fetch chat dispatch
+export const getChat = createAsyncThunk<
+Record<string, chatStructure>,
+void
+>('chats/getAll', async(_, {rejectWithValue}) =>{
+    try{
+        return await getFetch('/api/chat', transformChat)
+    }catch(error){
+        return rejectWithValue(error.message || 'Unexpected Error')
+    }
+})
+
+//rename chat
+export const renameChat = createAsyncThunk<
+  chatStructure, 
+  { chatId: string; newName: string }
+>('chats/rename', async({newName, chatId}, {getState,rejectWithValue}) =>{
+    try{
+        if(!chatId) return rejectWithValue('no chat selected')
+        const updatedChat: chatStructure = await apiFetch(`/api/chat/${chatId}`, 'PATCH', {newName}, transformChat)
+        if(!updatedChat) throw new Error('failed to rename chat')
+        return updatedChat
+    }catch(error){
+        return rejectWithValue(error.message || 'Unexpected Error')
+    }
+})
+
+//delete chat
+export const deleteChat = createAsyncThunk<
+void,
+string
+>('chats/delete', async(chatId: string,{dispatch,rejectWithValue})=>{
+    try{
+        const deletedChat = await apiFetch(`/api/chat/${chatId}`, 'DELETE', {chatId})
+        if(!deletedChat) throw new Error('failed to delete chat')
+        dispatch(deleteMessages(chatId))
+        return 
+    }catch(error){
+        return rejectWithValue(error.message || 'unexpected error')
+    }
+})
 
 const initialState: chatState ={
     activeChat: '',
     chats:{},
-    messages:{}
 }
 
 
@@ -17,30 +79,37 @@ const chatSlice= createSlice({
         setActiveChat: (state, action: PayloadAction<string>)=>{
             state.activeChat = action.payload
         },
-        addNewChat:(state, action: PayloadAction<chatStructure>)=>{
-            state.chats[action.payload.id] = action.payload
-        },
-        deleteChat:(state, action: PayloadAction<string>)=>{
-            const chatId = action.payload
-            
-            const {[chatId] : _, ...newChat} = state.chats
-            state.chats = newChat
-
-            const filteredMessage = Object.entries(state.messages).filter(([_, msg]) => msg.chatId !== chatId)
-            state.messages = Object.fromEntries(filteredMessage)
-        },
-        renameChat:(state, action: PayloadAction<{id: number, newName: string}>)=>{
-            state.chats[action.payload.id].name = action.payload.newName
-        },
-        addMessages:(state, action: PayloadAction<messageStructure>)=>{
-            state.chats[action.payload.chatId].chatListsId.push(action.payload.id)
-            state.messages[action.payload.id] = action.payload
-        },
-        addMessagesResponse:(state, action: PayloadAction<{msgId: string, response: responseStructure}>)=>{
-            state.messages[action.payload.msgId].response = action.payload.response
+        addMessageToChat:(state, action: PayloadAction<{chatId: string, msgId: string}>)=>{
+            state.chats[action.payload.chatId].messages.push(action.payload.msgId)
         }
-    }
+    },
+    extraReducers(builder) {
+        builder
+        .addCase(addChat.fulfilled, (state,action) =>{
+            state.chats[action.payload._id] = action.payload
+            state.activeChat = action.payload._id
+        })
+        .addCase(getChat.fulfilled,(state, action) =>{
+            state.chats = action.payload
+        })
+        .addCase(renameChat.fulfilled, (state, action) =>{
+            state.chats={
+                ...state.chats,
+                [action.payload._id]: {
+                    ...state.chats[action.payload._id],
+                    name: action.payload.name
+                }
+            }
+        })
+        .addCase(deleteChat.fulfilled, (state, action) =>{
+            const router= useRouter()
+            router.push('/agora')
+            const {[action.meta.arg]: _, ...restChat} = state.chats
+            state.chats = restChat
+
+        })
+    },
 })
 
-export const{setActiveChat, addNewChat, deleteChat, renameChat, addMessages, addMessagesResponse} = chatSlice.actions
+export const{setActiveChat, addMessageToChat } = chatSlice.actions
 export default chatSlice.reducer
