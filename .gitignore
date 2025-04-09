@@ -38,7 +38,4 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
-next.config.ts
-next.config.ts
-next.config.ts
+
