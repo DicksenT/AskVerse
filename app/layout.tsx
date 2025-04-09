@@ -2,9 +2,8 @@
 import type { Metadata } from "next";
 import React from "react";
 import './globals.css';
-import ProvidedComponent from "./components/ProvidedComponent";
 export const metadata: Metadata = {
-  title: "Chat AI",
+  title: "AskVerse",
 };
 
 export default function RootLayout({
@@ -14,10 +13,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <ProvidedComponent>
+      <body className="bg-chat text-text">
+        
           {children}
-        </ProvidedComponent>
+   
       </body>
     </html>
   );

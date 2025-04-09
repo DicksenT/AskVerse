@@ -1,60 +1,43 @@
-import Image from "next/image";
+'use client'
 import React from "react";
-import { Response } from "./components/Response";
+import { ModelList } from "./components/ModelList";
+import Link from "next/link";
 
-interface Feature{
-  name:string;
-  desc:string;
-  img:string;
-  bgColor:string
-}
 
-const features: Feature[] =[
-  {
-    "name": "Draft E-mail",
-    "desc": "Generate email for any occassion",
-    "img": '/mail.svg',
-    "bgColor": "bg-indigo-50",
-  },
-  {
-    "name": "Write an Essay",
-    "desc": "Genereate essay just for you",
-    "img":"/pen.svg",
-    'bgColor': "bg-green-50"
-  },
-  {
-    "name": 'Planning',
-    "desc": "Plan for anything",
-    "img": "/plan.svg",
-    "bgColor": "bg-fuchsia-50"
-  },
-  {
-    "name": 'Assistant',
-    "desc": "Become your No.1 Personal Assistant",
-    "img": '/chat.svg',
-    "bgColor": "bg-amber-50"
-  }
-]
-export default function Home() {
-  return (
-    <section>
-      <h3 className="text-2xl mb-16">
-        <span className="font-bold ">
-          Hi, I'm Chat AI &nbsp;
-        </span>
-         Your AI assistant and companion
-      </h3>
-      <ul className="flex flex-wrap gap-4 justify-center">
-        {features.map((feature, i) =>(
-          <li key={i} className="w-[180px] flex flex-col gap-6 p-4 rounded-lg border border-solid border-neutral-200">
-            <div className={`flex justify-center items-center w-12 h-12 p-2 rounded-lg ${feature.bgColor}`}>
-              <Image src={feature.img} width={24} height={24} alt={feature.name}/>
-            </div>
-            <h4 className='font-bold'>{feature.name}</h4>
-            <p>{feature.desc}</p>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
+
+export default function LandingPage(){
+    const pros = [
+        {
+            main: 'Multi-AI Insight',
+            exp: 'Get different perspectives from top AI models.'
+        },
+        {
+            main: 'Compare & Choose',
+            exp: 'Compare each responses, and pick the one fit you'
+        },
+        {
+            main: 'Fast & Interactive',
+            exp: 'No more switching between AI platform, We brings them all to you.'
+        }
+    ]
+    return(
+       <main className="flex justify-center items-center h-screen">
+        <section className="max-w-3xl flex flex-col justify-center items-center text-center gap-5 w-full">
+            <h1 className="font-medium text-4xl"><span className="font-black text-2xl">AskVerse</span><br/>Your Multi-AI Answer Hub</h1>
+            <div className="">Tired of relying on just one AI? AskVerse lets you ask questions and receive responses from multiple AI {<ModelList/>} in one place! Compare answers, gain diverse insights, and choose the response that best suits your needs.</div>
+            <h2 className="mt-10 font-extrabold ">Why AskVerse?</h2>
+            <ul className="flex-col gap-2 flex">
+                {pros.map((pro) =>(
+                    <li className="flex" key={pro.main}>
+                        <span className="font-bold">{pro.main}</span> - {pro.exp}
+                    </li>
+                ))}
+            </ul>
+            <h3 className="font-bold">Ask.Compare.Learn</h3>
+            <Link href={'/login'}>
+            <button className="border p-2 rounded-md hover:bg-text hover:text-background transition-all duration-500 ">Start exploring</button>
+            </Link>
+        </section>
+        </main>
+    )
 }
