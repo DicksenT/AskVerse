@@ -23,25 +23,36 @@ export async function addMessage(userId: Types.ObjectId,chatId: Types.ObjectId, 
     }
 }
 
-export async function addResponseToMessage(userId: Types.ObjectId, chatId: Types.ObjectId, msgId: Types.ObjectId, response: Partial<IResponse>){
+export async function addResponseToMessage(userId: Types.ObjectId, chatId: Types.ObjectId, messageId: Types.ObjectId, response: IResponse){
     await dbConnect()
     try{
         const chat = await Chat.findOne({userId, _id: chatId})
         if(!chat) throw new Error('Unauthorized')
 
-        const message = await Message.findOne({_id: msgId, chatId})
+        const message = await Message.findOne({_id: messageId, chatId})
         if(!message) throw new Error('Message do not exist')
         
-        const newResponse = await Response.create({
-            messageId: msgId,
-            ...response
-        })
+        const newResponse = await Response.create(response)
         if(!newResponse) throw new Error('failed to create respomnse')
         
-        await Message.updateOne({_id: msgId}, {response: newResponse})
+        await Message.updateOne({_id: messageId}, {$push : {response: newResponse._id}})
         return newResponse
     }catch(error){
         console.error('failed in addResponseToMessage', error)
         throw new Error(error.message || 'failed to add response')
+    }
+}
+
+export async function getMessages(userId: Types.ObjectId, chatId: Types.ObjectId){
+    try{
+        await dbConnect()
+        const chat = await Chat.findOne({userId, _id: chatId})
+        if(!chat) throw new Error('Couldnt find chat or unauthorized')
+        const messages = await Message.find({chatId}).populate('response')
+        if(!messages.length) throw new Error('Messages is not available')
+        return messages
+    }catch(error){
+        console.error('failed in getMessage', error)
+        throw new Error(error.message || 'failed to get messages')
     }
 }
