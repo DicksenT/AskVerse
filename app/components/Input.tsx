@@ -1,56 +1,64 @@
 'use client'
 import Image from "next/image"
 import React, { useEffect, useRef, useState } from "react"
-import { GenerateCohere } from "../api/Cohere"
-import { GenerateDeepSeek } from "../api/DeepSeek"
-import { GenerateGemini } from "../api/Gemini"
-import { GenerateOpenAI } from "../api/OpenAI"
-import { GenerateClaude } from "../api/Claude"
+import { GenerateCohere } from "../api/llm/Cohere"
+import { GenerateDeepSeek } from "../api/llm/DeepSeek"
+import { GenerateGemini } from "../api/llm/Gemini"
+import { GenerateOpenAI } from "../api/llm/OpenAI"
+import { GenerateClaude } from "../api/llm/Claude"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../../redux/store"
-import { addMessages, addMessagesResponse, addNewChat, setActiveChat } from "../../redux/chatSlice"
-import { chatStructure, messageStructure, responseStructure } from "../interfaces"
+import { addChat, setActiveChat } from "../../redux/chatSlice"
+import { chatStructure, responseStructure } from "../interfaces"
 import { usePathname, useRouter } from "next/navigation"
-const Input = () =>{
+import { addResponse, postMessages } from '../../redux/messageSlice'
+import { Personality } from "./Personality"
+
+
+interface inputProps{
+    scrollToBottom: () => void
+}
+
+const Input:React.FC<inputProps> = ({scrollToBottom}) =>{
     const pathname = usePathname()
     const router = useRouter()
     const dispatch = useDispatch<AppDispatch>()
     const activeChat = useSelector((state: RootState) => state.chats.activeChat)
-    const [messageId, setMessageId] = useState<string>()
-    const messageLoading = useSelector((state: RootState) => messageId ? state.chats.messages[messageId].response.isLoading : false)
+    const [messageId, setMessageId] = useState<string>('')
+    const isLoading = useSelector((state: RootState) => state.messages.messages[messageId]?.response[0]?.isLoading)
+    const currentMsg = useSelector((state: RootState) => state.messages.messages[messageId])
     const [text, setText] = useState<string>('')
     const textRef = useRef(null)
+
+    const [personality, setPersonality] = useState<string>('Normal')
+    const [temperature, setTemperature] = useState<number>()
+    const [isChoosing, setIsChoosing] = useState<boolean>(false)
+
+    useEffect(() =>{
+       console.log(personality)
+    },[personality])
+
     //dynamically adjust text area height
-   
     const handleInput = (e) =>{
         setText(e.currentTarget.value)
         textRef.current.style.height = '40px'
-        textRef.current.style.height = `${textRef.current.scrollHeight}px`
-    }
-    const addMessageFn = async(question: string, chatId : string) =>{
-       
-        const newMessage: messageStructure = {
-            id: crypto.randomUUID(),
-            chatId: chatId,
-            question: question,
-            response: {
-                OpenAI: null,
-                Gemini: null,
-                Cohere: null,
-                DeepSeek: null,
-                Claude: null,
-                isLoading: true
-            }    
+        if(textRef.current.scrollHeight > 128){
+            textRef.current.style.height = '128px'
+            textRef.current.style.overflowY ='scroll'
+        }else{
+            textRef.current.style.height = `${textRef.current.scrollHeight}px`
+            textRef.current.style.overflowY ='hidden'
         }
-        dispatch(addMessages(newMessage))
-        setMessageId(newMessage.id)
-        
+    }
+
+    const generateResponse = async(question: string, msgId: string)=>{
+        console.log(temperature)
         const apiResponses = await Promise.all([
-            GenerateClaude(question),
-            GenerateCohere(question),
-            GenerateDeepSeek(question),
-            GenerateGemini(question),
-            GenerateOpenAI(question)
+            GenerateClaude(question, temperature),
+            GenerateCohere(question, temperature),
+            GenerateDeepSeek(question, temperature),
+            GenerateGemini(question, temperature),
+            GenerateOpenAI(question, temperature)
         ])
         const responseKeys = ['Claude', 'Cohere', 'DeepSeek', 'Gemini', 'OpenAI']
         const response = apiResponses.reduce((acc, value, index)=>{
@@ -58,57 +66,65 @@ const Input = () =>{
             return acc
         }, {} as Partial<responseStructure>)
 
-        const finalResponse: responseStructure ={
+        const finalResponse: Partial<responseStructure> ={
             ...response,
-            isLoading: false
+            msgId,
+            personality: personality
         }
-        dispatch(addMessagesResponse({msgId: newMessage.id, response: finalResponse}))     
+        console.log(finalResponse)
+        dispatch(addResponse(finalResponse))
+          
+    }
+
+    const addMessageFn = async(question: string, chatId : string) =>{
+        const newMessage = await dispatch(postMessages({question, chatId})).unwrap()
+        setMessageId(newMessage._id)
+        scrollToBottom()
+        generateResponse(question, newMessage._id)
     }
     const handleSubmit = async(e) =>{
        e.preventDefault()
-       if(messageLoading) return
+       if(isLoading) return
        const question = text
        setText('')
        textRef.current.style.height = '40px'
-       if(pathname === '/'){
-            const newChat: chatStructure = {
-                name:'New chat',
-                id: crypto.randomUUID(),
-                chatListsId: []
-            }
-            dispatch(addNewChat(newChat))
-            dispatch(setActiveChat(newChat.id))
+       if(pathname === '/agora'){
+            console.log('entered')
+            const newChat = await dispatch(addChat('New Chat')).unwrap()
+            console.log(newChat)
+            addMessageFn(question, newChat._id)
             setTimeout(() =>{
-                router.push(newChat.id)
-                addMessageFn(question, newChat.id)
-            },500)
+                router.push(`/agora/${newChat._id}`)
+            },200)
         }
         else{
             addMessageFn(question, activeChat)
         }
-
-        
+         
     }
     return(
-        <div className="flex flex-col justify-center max-w-xl w-full items-center">
-        <form className=" min-h-16 max-w-xl pb-4 bg-white flex items-end w-full gap-2 px-4" onSubmit={ (e)=>  handleSubmit(e)}>
-            <textarea 
-            className="resize-none border rounded-lg bg-indigo-100 outline-none px-4 
-            text-xs md:text-sm md:py-2 lg:text-base lg:py-1 w-[calc(100%-40px-8px)] h-10 py-3" name="" id=""
-            placeholder="Ask me anything..."
-            onInput={handleInput} 
-            value={text}
-            ref={textRef}
-            onKeyDown={(e) =>{
-                if(e.key === 'Enter' && !e.shiftKey){
-                    handleSubmit(e)
-                }
-            }}></textarea>
-            <button className={`w-10 h-10 bg-indigo-700 p-2.5 rounded-md ${messageLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
-                <Image alt="send image" src='/send-active.svg' width={20} height={20}/>
-            </button>
-        </form>
-        <p className="text-xs font-bold">Response may take a while, please buckle up</p>
+        <div className="flex py-2 flex-col justify-center max-w-xl w-full items-center relative bg-chatBackground rounded-t-3xl">
+            <form className=" min-h-16 max-w-xl pb-4 flex items-end w-full gap-2 px-4" onSubmit={ (e)=>  handleSubmit(e)}>
+                <textarea 
+                className="resize-none bg-chatBackground outline-none px-4 
+                text-xs md:text-sm md:py-2 lg:text-base lg:py-1 w-[calc(100%-40px-8px)] h-10 py-3" name="" id=""
+                placeholder="Ask me anything..."
+                onInput={handleInput} 
+                value={text}
+                ref={textRef}
+                onKeyDown={(e) =>{
+                    if(e.key === 'Enter' && !e.shiftKey){
+                        handleSubmit(e)
+                    }
+                }}></textarea>
+                <button onClick={(e) => handleSubmit(e)} className={`w-10 h-10 bg-primary p-2.5 rounded-md ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                    <Image alt="send image" src='/send-active.svg' width={20} height={20}/>
+                </button>
+            </form>
+            <button onClick={() => setIsChoosing((prevState) => !prevState)}
+            className={`text-blur flex text-xs hover:bg-chat items-center transition-all duration-500 px-2 rounded-lg ${personality !== 'Normal' && 'text-primary'}`}>{personality !== 'Normal' ? personality : 'Choose Personality'}<Image src={'/arrow-down-line.svg'} alt="arrow" height={20} width={20}/></button>
+                {isChoosing && <Personality setIsChoosing={setIsChoosing} setPersonality={setPersonality} personality={personality}
+                setTemperature={setTemperature}/>}
         </div>
     )
 }
