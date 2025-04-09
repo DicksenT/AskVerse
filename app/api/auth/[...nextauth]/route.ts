@@ -11,7 +11,8 @@ export const authOptions: AuthOptions ={
     providers:[
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            allowDangerousEmailAccountLinking: true
         }),
         Credentials({
             name:'Credentials',
@@ -36,19 +37,31 @@ export const authOptions: AuthOptions ={
             }
         })
     ],
-    secret: process.env.NEXTAUTH,
+    secret: process.env.NEXTAUTH_SECRET,
     callbacks:{
-        async signIn({user}){
+        async redirect({url,baseUrl}){
+            return `${baseUrl}/agora`
+        },
+        async signIn({user, account}){
+    
             await dbConnect()
             const existedUser = await User.findOne({email: user.email})
-            if(!existedUser){
-                await User.create({
-                    email: user.email,
-                    image: user.image,
-                    chats: []
-                })
+            try{
+                if(existedUser){
+                    return true
+                }
+                else{
+                    await User.create({
+                        email: user.email,
+                        image: user.image,
+                        chats: []
+                    })
+                return true
+                }
+            }catch(error){
+                console.error('error in SignIn', error)
+                return false
             }
-            return true
         },
         async jwt({token, user}){
             if(user){
