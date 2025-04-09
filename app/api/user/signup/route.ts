@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addUser } from "../../../../backend/controllers/userController";
-import { requireAuth } from "../../../middleware/requireAuth";
+import { requireAuth } from "../../../lib/requireAuth";
 
 export async function POST(req: NextRequest){
     try{
