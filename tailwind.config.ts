@@ -9,8 +9,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: "#121212",
+        primary: "#4A90E2",
+        secondary: "#333333",
+        text: "#EAEAEA",
+        blur: '#9e9e9e',
+        chat: "#1a1a1a",
+        chatBackground: '#282828'
       },
     },
   },
