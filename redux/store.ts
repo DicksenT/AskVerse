@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import sidebarReducer from './sidebarSlice'
+import stateReducer from './stateSlice'
 import chatSliceReducer from './chatSlice'
+import messageSliceReducer from './messageSlice'
 
 export const store = configureStore({
     reducer:{
-        sidebar: sidebarReducer,
-        chats: chatSliceReducer
+        state: stateReducer,
+        chats: chatSliceReducer,
+        messages: messageSliceReducer
     }
 })
 
