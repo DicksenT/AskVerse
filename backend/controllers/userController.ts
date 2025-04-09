@@ -16,7 +16,7 @@ export async function addUser(email: string, password: string){
         }
         signUpScheme.parse({email, password})
 
-        const existUser = await User.findOne({email: email})
+        const existUser = await User.findOne({email})
         if(existUser) throw new Error('user already existed')
 
         const hashedPassword = await bcrypt.hash(password, 10)
