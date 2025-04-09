@@ -1,8 +1,9 @@
-import {Schema, model, Document, Types} from 'mongoose'
+import mongoose, {Schema, model, Document, Types, models} from 'mongoose'
 export interface IUser extends Document{
     email: string
     password?: string
     image?: string
+    name?: string
     chats: Types.ObjectId[]
 }
 const userScheme = new Schema<IUser>({
@@ -12,5 +13,5 @@ const userScheme = new Schema<IUser>({
     chats:[{type: Schema.Types.ObjectId, ref: 'Chat'}]
 })
 
-const User = model<IUser>('User', userScheme)
+const User = models.User as mongoose.Model<IUser> || model<IUser>('User', userScheme)
 export default User

@@ -1,4 +1,4 @@
-import {Schema, model, Document, Types} from 'mongoose'
+import mongoose, {Schema, model, Document, Types, models} from 'mongoose'
 
 export interface IChat extends Document{
     _id: Types.ObjectId
@@ -12,6 +12,5 @@ const chatScheme = new Schema<IChat>({
     messages: [{type: Schema.Types.ObjectId , ref: 'Message'}]
 })
 
-const Chat = model<IChat>('Chat', chatScheme)
-
+const Chat = (models.Chat as mongoose.Model<IChat>) || model<IChat>("Chat", chatScheme);
 export default Chat
