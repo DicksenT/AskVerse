@@ -5,6 +5,8 @@ import GoogleProvider from 'next-auth/providers/google'
 import Credentials from "next-auth/providers/credentials";
 import User from "../../../../backend/models/userModel";
 import bcrypt from 'bcryptjs'
+import { addPassword, addUser } from "../../../../backend/controllers/userController";
+import { error } from "console";
 
 export const authOptions: AuthOptions ={
     adapter: MongoDBAdapter(clientPromise),
@@ -22,18 +24,33 @@ export const authOptions: AuthOptions ={
             },
             async authorize(credentials){
                 await dbConnect()
+
                 const user = await User.findOne({email: credentials.email})
-                if(!user){
-                    return null
-                }
-                const pass = await bcrypt.compare(credentials.password, user.password)
-                if(!pass){
-                    return null
-                }
+                if(user){
+                    if(!user.password){
+                        const editedUser = await addPassword(credentials.email, credentials.password)
+         
+                        if(!editedUser) return null
+                        return{
+                            id: editedUser._id.toString(),
+                            email: editedUser.email
+                        }
+                    }
+                    const pass = await bcrypt.compare(credentials.password, user.password)
+                    if(!pass) return null
                 return {
                     id: user._id.toString(),
                     email: user.email
                 }
+                }
+                else{
+                    const newUser = await addUser(credentials.email, credentials.password)
+                    if(newUser){
+                        return {id: newUser._id.toString(), email: newUser.email}
+                    }
+                }
+                return null
+                
             }
         })
     ],
@@ -43,9 +60,8 @@ export const authOptions: AuthOptions ={
             return `${baseUrl}/agora`
         },
         async signIn({user, account}){
-    
             await dbConnect()
-            const existedUser = await User.findOne({email: user.email})
+            const existedUser = await User.findOne({ email: user.email })
             try{
                 if(existedUser){
                     return true
@@ -76,6 +92,10 @@ export const authOptions: AuthOptions ={
     },
     session:{
         strategy: 'jwt'
+    },
+    pages:{
+        signIn: '/login',
+        error: '/login'
     }
 
     
