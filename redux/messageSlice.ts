@@ -77,7 +77,7 @@ const messageSlice = createSlice({
             state.messages = {...state.messages, ...action.payload}
         })
         .addCase(postMessages.fulfilled, (state, action) =>{
-            state.messages = {[action.payload._id]: action.payload, ...state.messages}
+            state.messages[action.payload._id]= action.payload
         })
         .addCase(addResponse.fulfilled, (state, action)=>{
             const resp = state.messages[action.payload.msgId].response
