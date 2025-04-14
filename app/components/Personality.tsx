@@ -25,9 +25,9 @@ export const Personality:React.FC<personalityProps> =({setIsChoosing, setTempera
         {
             name: 'Creative', 
             temp: 0.8,
-            description: "Imaginative, varied, great for writing and marketing."},
+            description: "Unique, varied, great for writing and marketing."},
         {
-            name: 'Brainstorm', 
+            name: 'Imaginative', 
             temp: 0.9,
             description: "Unpredictable, idea-rich, perfect for innovation." }
     ]
