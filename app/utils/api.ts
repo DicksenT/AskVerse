@@ -29,7 +29,7 @@ export const getFetch = async<T>(
     transformFn?: Function,
 ): Promise<Record<string, T> | null>=>{
     try{
-        console.log('entered')
+
         const res = await fetch(url)
         if(!res.ok){
             const err = await res.text()
@@ -37,13 +37,11 @@ export const getFetch = async<T>(
         }
         
         const {data} = await res.json()
-        console.log(data)
         const changedData = data.reduce((acc, val) =>{
             const data = transformFn ? transformFn(val) : val
             acc[data._id] = data
             return acc
         },{} as Record<string, T>)
-        console.log(changedData)
         return changedData
     }catch(error){
         console.error(error)

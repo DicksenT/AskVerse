@@ -23,7 +23,7 @@ export async function GET(req: NextRequest, {params}: {params: {chatId: string}}
         if(auth instanceof NextResponse) return auth
         const {chatId} = await params
         const messages = await getMessages(new Types.ObjectId(auth.userId), new Types.ObjectId(chatId))
-        console.log(messages)
+ 
         return NextResponse.json({messages: 'messages successfully fetched', data: messages}, {status: 200})
     }catch(error){
         return NextResponse.json({error: error.message}, {status: 400})

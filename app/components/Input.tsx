@@ -26,17 +26,13 @@ const Input:React.FC<inputProps> = ({scrollToBottom}) =>{
     const activeChat = useSelector((state: RootState) => state.chats.activeChat)
     const [messageId, setMessageId] = useState<string>('')
     const isLoading = useSelector((state: RootState) => state.messages.messages[messageId]?.response[0]?.isLoading)
-    const currentMsg = useSelector((state: RootState) => state.messages.messages[messageId])
     const [text, setText] = useState<string>('')
     const textRef = useRef(null)
 
     const [personality, setPersonality] = useState<string>('Normal')
-    const [temperature, setTemperature] = useState<number>()
+    const [temperature, setTemperature] = useState<number>(0.5)
     const [isChoosing, setIsChoosing] = useState<boolean>(false)
 
-    useEffect(() =>{
-       console.log(personality)
-    },[personality])
 
     //dynamically adjust text area height
     const handleInput = (e) =>{
@@ -52,7 +48,7 @@ const Input:React.FC<inputProps> = ({scrollToBottom}) =>{
     }
 
     const generateResponse = async(question: string, msgId: string)=>{
-        console.log(temperature)
+
         const apiResponses = await Promise.all([
             GenerateClaude(question, temperature),
             GenerateCohere(question, temperature),
@@ -71,7 +67,6 @@ const Input:React.FC<inputProps> = ({scrollToBottom}) =>{
             msgId,
             personality: personality
         }
-        console.log(finalResponse)
         dispatch(addResponse(finalResponse))
           
     }
@@ -89,13 +84,11 @@ const Input:React.FC<inputProps> = ({scrollToBottom}) =>{
        setText('')
        textRef.current.style.height = '40px'
        if(pathname === '/agora'){
-            console.log('entered')
             const newChat = await dispatch(addChat('New Chat')).unwrap()
-            console.log(newChat)
-            addMessageFn(question, newChat._id)
+            await addMessageFn(question, newChat._id)
             setTimeout(() =>{
                 router.push(`/agora/${newChat._id}`)
-            },200)
+            },500)
         }
         else{
             addMessageFn(question, activeChat)

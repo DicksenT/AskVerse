@@ -10,7 +10,7 @@ export async function GET(req:NextRequest){
         if(auth instanceof NextResponse) return auth 
         const userId = auth.userId
         const chats = await getChat(new Types.ObjectId(userId))
-        console.log('chat fetchd ',chats)
+   
         return NextResponse.json({message: 'chats successfully fetched', data: chats}, {status: 200})
     }catch(error){
         return NextResponse.json({error: error.message}, {status:400})

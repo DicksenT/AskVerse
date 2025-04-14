@@ -15,7 +15,7 @@ string
 ('chats/create', async(name: string, {rejectWithValue}) =>{
     try{
         const newChat: chatStructure =  await apiFetch('/api/chat', 'POST', {name}, transformChat)
-        console.log(newChat)
+    
         if(!newChat) throw new Error('failed to create chat')
         return newChat
     }catch(error){
@@ -102,8 +102,6 @@ const chatSlice= createSlice({
             }
         })
         .addCase(deleteChat.fulfilled, (state, action) =>{
-            const router= useRouter()
-            router.push('/agora')
             const {[action.meta.arg]: _, ...restChat} = state.chats
             state.chats = restChat
 

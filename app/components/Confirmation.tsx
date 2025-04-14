@@ -17,6 +17,7 @@ export const Confirmation: React.FC<ConfirmProps> = ({ text, setWindow, purpose,
   const router = useRouter()
   const handleConfirm = () => {
     if (purpose === "DELETE") {
+
       if (!chatId) return console.error("Chat ID is required for deletion");
       dispatch(deleteChat(chatId))
 

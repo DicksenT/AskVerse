@@ -16,7 +16,7 @@ void
         const state = getState() as RootState
         const chatId = state.chats.activeChat
         if(!chatId) return rejectWithValue('no chat selected')
-        console.log(chatId)
+
         return await getFetch<messageStructure>(`/api/chat/${chatId}/message`)
     }catch(error){
         return rejectWithValue(error.message || 'unexpected error')
@@ -31,6 +31,7 @@ export const postMessages = createAsyncThunk('messages/post', async(body: Partia
         const chatId = state.chats.activeChat
         if(!chatId) return rejectWithValue('no chat selected')
         const msg: messageStructure = await apiFetch(`/api/chat/${chatId}/message`, 'POST', body, transformMessage)
+
         if(!msg) throw new Error('failed to create messages')
         dispatch(addMessageToChat({chatId, msgId: msg._id}))
         return msg
@@ -49,7 +50,7 @@ Partial<responseStructure>
         if(!chatId) return rejectWithValue('no chat selected')
         const messageId = body.msgId
         const newResponse:responseStructure = await apiFetch(`/api/chat/${chatId}/message/${messageId}`, 'PATCH', body, transformResponse)
-        console.log(state.messages.messages[newResponse.msgId])
+ 
         return newResponse
     }catch(error){
         return rejectWithValue(error.message || 'unexpected error')
@@ -72,7 +73,7 @@ const messageSlice = createSlice({
     extraReducers(builder) {
         builder
         .addCase(fetchMessages.fulfilled, (state, action) =>{
-            console.log(action.payload)
+
             state.messages = {...state.messages, ...action.payload}
         })
         .addCase(postMessages.fulfilled, (state, action) =>{
