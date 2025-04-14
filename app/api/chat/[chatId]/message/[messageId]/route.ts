@@ -9,7 +9,7 @@ export async function PATCH(req:NextRequest, context: {params : {chatId: string,
         const auth = await requireAuth(req)
         if(auth instanceof NextResponse) return auth
         const {params} = context
-        const {chatId, messageId} = params
+        const {chatId, messageId} = await params
         const body = await req.json()
         const newResponse = await addResponseToMessage(new Types.ObjectId(auth.userId), new Types.ObjectId(chatId),new Types.ObjectId(messageId), body)
         return NextResponse.json({message: 'succesfully add Response to message', data: newResponse}, {status: 201})
