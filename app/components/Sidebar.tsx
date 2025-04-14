@@ -113,7 +113,7 @@ const PastChat = ({chat}: {chat: chatStructure}) =>{
             <div  className="flex w-full items-center px-2 h-8 gap-3" key={chat._id}>
                <Image src={`/file-inactive.svg`} alt="file logo" width={20} height={20}/>
                <p className="w-[calc(100%-20px-24px)] text-clip overflow-hidden whitespace-nowrap font-semibold">
-                  {renameActive ? <input ref={inputRef} className="bg-chatBackground w-[100%] rounded text-text p-1 text-sm"
+                  {renameActive ? <input ref={inputRef} className="outline-none bg-chatBackground w-[100%] rounded text-text p-1 text-sm"
                               value={renameInput} 
                               onChange={(e) => setRenameInput(e.currentTarget.value)} 
                               onKeyDown={(e) => {
