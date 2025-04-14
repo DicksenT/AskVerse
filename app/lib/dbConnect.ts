@@ -12,7 +12,7 @@ let client;
 let clientPromise: Promise<MongoClient>;
 
 if (!global._mongoClientPromise) {
-  client = new MongoClient(MONGO_URI),{tls: true};
+  client = new MongoClient(MONGO_URI,{tls: true, serverSelectionTimeoutMS: 5000});
   global._mongoClientPromise = client.connect();
 }
 clientPromise = global._mongoClientPromise;
