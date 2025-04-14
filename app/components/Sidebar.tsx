@@ -19,7 +19,10 @@ const Sidebar:React.FC<sideBarProps> = ({width}) =>{
    const dispatch = appDispatch()
    const sidebarActive = useSelector((state: RootState) => state.state.activeMenu)
    const chats = useSelector((state: RootState) =>  Object.values(state.chats.chats))
-   
+   const [signOutOption, setSignOutOption] = useState<boolean>(false)
+   const [confirmSignout, setConfirmSignout] = useState<boolean>(false)
+   const ellipsisRef = useRef(null)
+
  return(
       //background
    <div className={`bg-black bg-opacity-50 h-screen  top-0 left-0
@@ -57,11 +60,16 @@ const Sidebar:React.FC<sideBarProps> = ({width}) =>{
                Start new chat
             </button>
             </Link>
-            <div className="flex items-center px-3.5 py-2.5 justify-between">
+            <div className="flex items-center px-3.5 py-2.5 justify-between relative">
                {session?.user.email.split('@')[0]}
-               <button>
+               <button onClick={() => setSignOutOption(prevState => !prevState)}>
                   <Image src='/ellipsis.svg' alt="ellipsis button" width={20} height={20}/> 
                </button>
+               {signOutOption && 
+               <div className="absolute bg-chatBackground rounded-xl bottom-8 -right-4 p-2">
+                  <button className="text-red-500 text-xs" onClick={() => setConfirmSignout(true)}>Sign Out</button>
+               </div>}
+               {confirmSignout && <Confirmation text="Sign Out?" setWindow={setConfirmSignout} purpose="SIGNOUT"/>}
             </div>
          </div>
       </aside>          
@@ -87,11 +95,11 @@ const PastChat = ({chat}: {chat: chatStructure}) =>{
    const inputRef = useRef(null)
    useEffect(() =>{
       const handleClick = (e)=>{
-         console.log('here')
+
          if(ellipsisRef.current && !ellipsisRef.current.contains(e.target)){
             setChatOption(false)
          }
-         else if(inputRef.current && !inputRef.current.contains(e.target) && !ellipsisRef.current.contains(e.target)){
+         if(inputRef.current && !inputRef.current.contains(e.target) && !ellipsisRef.current.contains(e.target)){
             setRenameActive(false)
          }
       }
@@ -120,7 +128,7 @@ const PastChat = ({chat}: {chat: chatStructure}) =>{
                <Image src={'/ellipsis.svg'} alt="ellipsis logo" width={20} height={20} onClick={() => setChatOption(!chatOption)} className="cursor-pointer"/>
                   {chatOption && 
                <div className="absolute flex flex-col z-50 bg-chatBackground text-xs font-bold py-2 px-1 gap-3 rounded-xl w-24 -left-4">
-                  <button className="flex items-center px-2 py-2 rounded-lg hover:bg-chat" onClick={() => {setRenameActive(true), setRenameInput(chat.name)}}>
+                  <button className="flex items-center px-2 py-2 rounded-lg hover:bg-chat" onClick={() => {setRenameActive(true), setRenameInput(chat.name), setTimeout(()=>setChatOption(false),0)}}>
                      <Image src='/pencil-line.svg' alt="rename logo" width={20} height={20}/>
                      Rename
                   </button>
@@ -130,7 +138,7 @@ const PastChat = ({chat}: {chat: chatStructure}) =>{
                      Delete
                   </button>
                   {confirmDelete && 
-                  <Confirmation text={`delete ${chat.name}}?`} setWindow={setConfirmDelete} purpose="DELETE" chatId={chat._id}/>}
+                  <Confirmation text={`delete ${chat.name}?`} setWindow={setConfirmDelete} purpose="DELETE" chatId={chat._id}/>}
                </div>}
             </div>
          </li>
