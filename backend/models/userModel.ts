@@ -7,7 +7,7 @@ export interface IUser extends Document{
     chats: Types.ObjectId[]
 }
 const userScheme = new Schema<IUser>({
-    email:{type: String, required: true},
+    email:{type: String, required: true, unique:true},
     password:{type:String},
     image:{types:String},
     chats:[{type: Schema.Types.ObjectId, ref: 'Chat'}]
