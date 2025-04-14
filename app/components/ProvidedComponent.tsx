@@ -19,10 +19,9 @@ export default function ProvidedComponent({children}: {children: React.ReactNode
     const chats = useSelector((state: RootState) => state.chats.chats)
 
     useEffect(() =>{
-        if(Object.entries(chats).length < 1){
-            dispatch(getChat())
-        }
-    },[chats])
+        dispatch(getChat())
+        
+    },[])
     useEffect(() =>{
         const handleResize =()=>{
             dispatch(setWidth(window.innerWidth))
