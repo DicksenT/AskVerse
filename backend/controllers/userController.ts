@@ -32,3 +32,19 @@ export async function addUser(email: string, password: string){
         throw new Error(error.message || 'failed to create user')
     }
 }
+
+export async function addPassword(email: string, newPassword: string){
+    await dbConnect()
+    try{
+        if(!newPassword){
+            throw new Error('Password is required')
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, 10)
+
+        const editedUser = await User.findOneAndUpdate({email}, {password: hashedPassword}, {new:true})
+        return editedUser
+    }catch(error){
+        console.error('Error in addPassword', error)
+        throw new Error(error.message || 'failed to add password')
+    }
+}
