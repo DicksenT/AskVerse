@@ -86,7 +86,7 @@ const chatSlice= createSlice({
     extraReducers(builder) {
         builder
         .addCase(addChat.fulfilled, (state,action) =>{
-            state.chats[action.payload._id] = action.payload
+            state.chats ={[action.payload._id]: action.payload, ...state.chats}
             state.activeChat = action.payload._id
         })
         .addCase(getChat.fulfilled,(state, action) =>{
