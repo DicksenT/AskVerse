@@ -1,6 +1,6 @@
 'use client'
 import Image from "next/image"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import { GenerateCohere } from "../api/llm/Cohere"
 import { GenerateDeepSeek } from "../api/llm/DeepSeek"
 import { GenerateGemini } from "../api/llm/Gemini"
@@ -8,8 +8,8 @@ import { GenerateOpenAI } from "../api/llm/OpenAI"
 import { GenerateClaude } from "../api/llm/Claude"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../../redux/store"
-import { addChat, setActiveChat } from "../../redux/chatSlice"
-import { chatStructure, responseStructure } from "../interfaces"
+import { addChat } from "../../redux/chatSlice"
+import { responseStructure } from "../interfaces"
 import { usePathname, useRouter } from "next/navigation"
 import { addResponse, postMessages } from '../../redux/messageSlice'
 import { Personality } from "./Personality"

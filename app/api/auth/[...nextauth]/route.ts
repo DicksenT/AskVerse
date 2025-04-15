@@ -6,7 +6,6 @@ import Credentials from "next-auth/providers/credentials";
 import User from "../../../../backend/models/userModel";
 import bcrypt from 'bcryptjs'
 import { addPassword, addUser } from "../../../../backend/controllers/userController";
-import { error } from "console";
 
 export const authOptions: AuthOptions ={
     adapter: MongoDBAdapter(clientPromise),
@@ -56,10 +55,10 @@ export const authOptions: AuthOptions ={
     ],
     secret: process.env.NEXTAUTH_SECRET,
     callbacks:{
-        async redirect({url,baseUrl}){
+        async redirect({baseUrl}){
             return `${baseUrl}/agora`
         },
-        async signIn({user, account}){
+        async signIn({user}){
             await dbConnect()
             const existedUser = await User.findOne({ email: user.email })
             try{

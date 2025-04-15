@@ -1,6 +1,6 @@
 import { handlePrompt } from "../../utils/markdownPrompt";
 
-const { CohereClientV2 } = require('cohere-ai');
+import {CohereClientV2} from 'cohere-ai'
 
 export async function GenerateCohere(prompt: string, temperature: number){
 

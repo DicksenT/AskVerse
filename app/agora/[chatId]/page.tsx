@@ -1,6 +1,6 @@
 'use client'
-import { useParams, usePathname } from "next/navigation"
-import React, { useEffect, useRef, useState } from "react"
+import { usePathname } from "next/navigation"
+import React, { useEffect } from "react"
 import { AppDispatch, RootState } from "../../../redux/store"
 import { setActiveChat } from "../../../redux/chatSlice"
 import { Loading } from "../../components/Loading"
@@ -8,7 +8,6 @@ import { Response } from "../../components/Response"
 import { LostPage } from "../../components/404"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchMessages } from "../../../redux/messageSlice"
-import Image from "next/image"
 
 const ChatPage = () =>{
     const pathname = usePathname()

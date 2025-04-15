@@ -1,7 +1,7 @@
 'use client'
 
-import { Provider, useDispatch, useSelector } from "react-redux"
-import store, { AppDispatch, RootState } from "../../redux/store"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "../../redux/store"
 import Header from "./Header"
 import Input from "./Input"
 import Sidebar from "./Sidebar"
@@ -16,11 +16,9 @@ export default function ProvidedComponent({children}: {children: React.ReactNode
     const dispatch = useDispatch<AppDispatch>()
     const width = useSelector((state : RootState) => state.state.width)
     const scrollRef = useRef(null)
-    const chats = useSelector((state: RootState) => state.chats.chats)
 
     useEffect(() =>{
         dispatch(getChat())
-        
     },[])
     useEffect(() =>{
         const handleResize =()=>{

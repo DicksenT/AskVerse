@@ -1,6 +1,6 @@
 import Image from "next/image"
 import React, { useEffect, useRef, useState } from "react"
-import { setActiveMenu, setProfileSetting } from "../../redux/stateSlice"
+import { setActiveMenu } from "../../redux/stateSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState, AppDispatch } from "../../redux/store"
 import Link from "next/link"
@@ -15,13 +15,11 @@ interface sideBarProps{
 
 const Sidebar:React.FC<sideBarProps> = ({width}) =>{
    const {data: session} = useSession()
-   const appDispatch = () => useDispatch<AppDispatch>()
-   const dispatch = appDispatch()
+   const dispatch = useDispatch<AppDispatch>()
    const sidebarActive = useSelector((state: RootState) => state.state.activeMenu)
    const chats = useSelector((state: RootState) =>  Object.values(state.chats.chats))
    const [signOutOption, setSignOutOption] = useState<boolean>(false)
    const [confirmSignout, setConfirmSignout] = useState<boolean>(false)
-   const ellipsisRef = useRef(null)
 
  return(
       //background
@@ -85,7 +83,7 @@ const PastChat = ({chat}: {chat: chatStructure}) =>{
    const dispatch = useDispatch<AppDispatch>()
    const handleRename = async(chatId: string, newName: string) =>{
       setRenameInput(newName)
-      const renamed = await dispatch(renameChat({chatId, newName})).unwrap()
+      await dispatch(renameChat({chatId, newName}))
       setRenameInput('')
       setRenameActive(false)
    }

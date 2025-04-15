@@ -1,9 +1,6 @@
 'use client'
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { responseStructure } from "../interfaces";
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";

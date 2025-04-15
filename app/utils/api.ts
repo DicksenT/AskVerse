@@ -1,8 +1,8 @@
-export const apiFetch = async<T>(
+export const apiFetch = async<T=any>(
     url: string,
     method: "GET" | "POST" | 'DELETE' | 'PATCH',
-    body?: any,
-    transformFn?: Function
+    body?: T,
+    transformFn?: (data: any) => any
 ): Promise<T | null>=>{
     try{
         const response = await fetch(url, {
@@ -26,7 +26,7 @@ export const apiFetch = async<T>(
 
 export const getFetch = async<T>(
     url:string,
-    transformFn?: Function,
+    transformFn?: (data: any) => any,
 ): Promise<Record<string, T> | null>=>{
     try{
 

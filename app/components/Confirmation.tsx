@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { deleteChat } from "../../redux/chatSlice";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 interface ConfirmProps {
   text: string;
@@ -14,10 +13,8 @@ interface ConfirmProps {
 
 export const Confirmation: React.FC<ConfirmProps> = ({ text, setWindow, purpose, chatId }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const router = useRouter()
   const handleConfirm = () => {
     if (purpose === "DELETE") {
-
       if (!chatId) return console.error("Chat ID is required for deletion");
       dispatch(deleteChat(chatId))
 
