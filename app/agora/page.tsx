@@ -2,9 +2,7 @@
 
 import Image from "next/image";
 import React, { useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+
 
 interface Feature{
   name:string;
