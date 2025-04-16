@@ -16,7 +16,7 @@ declare global {
 }
 
 // MongoClient for NextAuth
-let client: MongoClient;
+
 const clientPromise: Promise<MongoClient> =
   global._mongoClientPromise ||
   (global._mongoClientPromise = new MongoClient(MONGO_URI, {

@@ -104,7 +104,13 @@ const PastChat = ({chat}: {chat: chatStructure}) =>{
       window.addEventListener('click', handleClick)
       return ()=>{window.removeEventListener('click', handleClick)}
    },[])
+   
 
+   const handleRenameClick = (name: string) =>{
+      setRenameActive(true) 
+      setRenameInput(name)
+      setTimeout(()=>setChatOption(false),0)
+   }
    return(
       
          <li className="flex gap-3 w-full justify-between items-center text-sm">
@@ -126,7 +132,7 @@ const PastChat = ({chat}: {chat: chatStructure}) =>{
                <Image src={'/ellipsis.svg'} alt="ellipsis logo" width={20} height={20} onClick={() => setChatOption(!chatOption)} className="cursor-pointer"/>
                   {chatOption && 
                <div className="absolute flex flex-col z-50 bg-chatBackground text-xs font-bold py-2 px-1 gap-3 rounded-xl w-24 -left-4">
-                  <button className="flex items-center px-2 py-2 rounded-lg hover:bg-chat" onClick={() => {setRenameActive(true), setRenameInput(chat.name), setTimeout(()=>setChatOption(false),0)}}>
+                  <button className="flex items-center px-2 py-2 rounded-lg hover:bg-chat" onClick={() => handleRenameClick(chat.name)}>
                      <Image src='/pencil-line.svg' alt="rename logo" width={20} height={20}/>
                      Rename
                   </button>
