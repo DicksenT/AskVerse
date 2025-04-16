@@ -17,11 +17,11 @@ export async function POST(req: NextRequest){
 }
 
 //fetch message
-export async function GET(req: NextRequest, {params}: {params: {chatId: string}}){
+export async function GET(req: NextRequest, context: {params: {chatId: string}}){
     try{
         const auth = await requireAuth(req)
         if(auth instanceof NextResponse) return auth
-        const {chatId} = params
+        const {chatId} =  context.params
         const messages = await getMessages(new Types.ObjectId(auth.userId), new Types.ObjectId(chatId))
  
         return NextResponse.json({messages: 'messages successfully fetched', data: messages}, {status: 200})

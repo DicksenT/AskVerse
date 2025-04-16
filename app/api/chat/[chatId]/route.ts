@@ -4,12 +4,12 @@ import { deleteChat, renameChat } from "../../../../backend/controllers/chatCont
 import { Types } from "mongoose";
 
 //delete chat
-export async function DELETE(req: NextRequest, {params}: {params: {chatId:string}}){
+export async function DELETE(req: NextRequest, context: {params: {chatId:string}}){
     try{
         const auth = await requireAuth(req)
         if(auth instanceof NextResponse) return auth
         const userId = auth.userId
-        const {chatId} = params
+        const {chatId} = context.params
         const deletedChat = await deleteChat(new Types.ObjectId(userId), new Types.ObjectId(chatId))
         return NextResponse.json({message: 'successfully delete Chat', data: deletedChat}, {status: 200})
     }catch(error){
@@ -18,11 +18,11 @@ export async function DELETE(req: NextRequest, {params}: {params: {chatId:string
 }
 
 //rename chat
-export async function PATCH(req: NextRequest, {params} : {params : {chatId: string}}){
+export async function PATCH(req: NextRequest, context : {params : {chatId: string}}){
     try{
         const auth = await requireAuth(req)
         if(auth instanceof NextResponse)return auth
-        const {chatId} = params
+        const {chatId} = context.params
         const {newName} = await req.json()
         const renamedChat = await renameChat(new Types.ObjectId(auth.userId), new Types.ObjectId(chatId), newName)
         return NextResponse.json({message: 'chat successfully renamed', data: renamedChat}, {status: 200})
