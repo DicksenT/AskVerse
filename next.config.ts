@@ -8,7 +8,8 @@ const nextConfig: NextConfig = {
     GEMINI_API: process.env.GEMINI_API,
     DEEPSEEK_API: process.env.DEEPSEEK_API,
     OPENAI_API: process.env.OPENAI_API,
-  }
+  },
+  
 };
 
 export default nextConfig;
