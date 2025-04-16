@@ -9,7 +9,7 @@ export async function DELETE(req: NextRequest, {params}: {params: {chatId:string
         const auth = await requireAuth(req)
         if(auth instanceof NextResponse) return auth
         const userId = auth.userId
-        const {chatId} = await params
+        const {chatId} = params
         const deletedChat = await deleteChat(new Types.ObjectId(userId), new Types.ObjectId(chatId))
         return NextResponse.json({message: 'successfully delete Chat', data: deletedChat}, {status: 200})
     }catch(error){
