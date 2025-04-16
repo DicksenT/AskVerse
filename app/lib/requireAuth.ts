@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "./authOptions";
+
 
 export async function requireAuth(req: NextRequest){
     try{
