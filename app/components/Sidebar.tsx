@@ -142,7 +142,7 @@ const PastChat = ({chat}: {chat: chatStructure}) =>{
                      Delete
                   </button>
                   {confirmDelete && 
-                  <Confirmation text={`delete ${chat.name}?`} setWindow={setConfirmDelete} purpose="DELETE" chatId={chat._id}/>}
+                  <Confirmation text={`delete ${chat.name}`} setWindow={setConfirmDelete} purpose="DELETE" chatId={chat._id}/>}
                </div>}
             </div>
          </li>
