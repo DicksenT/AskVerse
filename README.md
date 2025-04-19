@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧠 AskVerse — AI Markdown Chat Platform
 
-## Getting Started
+A full-stack web app that lets users compare responses from multiple AI models (OpenAI, Claude, Gemini, Cohere, DeepSeek) in real-time with rich Markdown rendering.
 
-First, run the development server:
+🔗 **Live Demo**: [askverse.ai](https://askverse.dicksentan.com)  
+📁 **Tech Stack**: Next.js, TypeScript, TailwindCSS, MongoDB, Mongoose, NextAuth, OpenAI API
+
+---
+
+## ✨ Features
+
+- 🔁 Compare responses from **OpenAI**, **Claude**, **Cohere**, **DeepSeek**, and **Gemini** side-by-side
+- 📝 Custom Markdown renderer with **syntax highlighting**, **Mermaid diagrams**, and **TOC generation**
+- 🔐 Auth via **NextAuth** (OAuth2 + Credentials), with **JWT sessions** and account linking
+- 🗂️ Persistent chat & message storage via **MongoDB** (Mongoose schemas)
+- 🧠 Temperature-aware prompt formatting to highlight model creativity
+- 📱 Fully responsive UI optimized for mobile and desktop
+
+---
+## 📸 Preview
+
+<p align="center">
+  <img src="./public/landingPage.png" alt="Landing Page" width="80%"/>
+  <br/>
+  <img src="./public/HomeChatPage.png" alt="Chat Home" width="80%"/>
+  <br/>
+  <img src="./public/chatCompare.png" alt="Chat Comparison" width="80%"/>
+  <br/>
+  <img src="./public/compareAll.png" alt="Compare All Models" width="80%"/>
+  <br/>
+  <img src="./public/normalResponse.png" alt="Normal Chat Response" width="80%"/>
+</p>
+
+
+## ⚙️ Getting Started
 
 ```bash
+# Install dependencies
+npm install
+
+# Add your .env variables (MongoDB URI, NextAuth secret, API keys, GOOGLE Client and Google Secret for OAuth)
+cp .env.example .env.local
+
+# Run the app locally
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧠 How It Works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Auth: Uses **NextAuth** for OAuth2 and Credentials-based login  
+- DB: Stores users, chats, messages, and model responses in **MongoDB**  
+- Frontend: Built with **Next.js App Router**, **TailwindCSS**, and **Markdown rendering components**  
+- LLMs: Uses OpenAI, Gemini, Cohere, DeepSeek, and Claude APIs with adjustable personality(different Temperature)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🔭 Future Improvements
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Streaming responses (WIP)
+- UI theme toggle (dark/light)
+- Prompt history reuse and versioning
+- Add local vector store + RAG support
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 👨‍💻 Author
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Dicksen Tan**  
+[Portfolio](https://dicksentan.com) • [GitHub](https://github.com/DicksenT)
