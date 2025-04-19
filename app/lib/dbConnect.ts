@@ -1,45 +1,56 @@
-import mongoose, { Mongoose } from "mongoose";
-import { MongoClient } from "mongodb";
+import mongoose, { Mongoose } from 'mongoose';
+import { MongoClient } from 'mongodb';
 
 const MONGO_URI = process.env.MONGODB_URI!;
-if (!MONGO_URI) throw new Error("Please define MONGODB_URI");
+if (!MONGO_URI) throw new Error('Please define MONGODB_URI');
 
-// Proper global type declaration
+// --- Mongoose Global Connection ---
 declare global {
-  // eslint-disable-next-line no-var
-  var _mongoClientPromise: Promise<MongoClient> | undefined;
-  // eslint-disable-next-line no-var
-  var mongoose: {
+  var mongooseConn: {
     conn: Mongoose | null;
     promise: Promise<Mongoose> | null;
   };
+  var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-// MongoClient for NextAuth
+// 👇 Global caching
+const globalCache = globalThis as typeof globalThis & {
+  mongooseConn: {
+    conn: Mongoose | null;
+    promise: Promise<Mongoose> | null;
+  };
+  _mongoClientPromise?: Promise<MongoClient>;
+};
 
-const clientPromise: Promise<MongoClient> =
-  global._mongoClientPromise ||
-  (global._mongoClientPromise = new MongoClient(MONGO_URI, {
-    tls: true,
-    serverSelectionTimeoutMS: 5000,
-  }).connect());
+globalCache.mongooseConn = globalCache.mongooseConn || {
+  conn: null,
+  promise: null,
+};
 
-// Mongoose for models
-const cached = global.mongoose || { conn: null, promise: null };
-
+// ✅ Mongoose for custom models
 export async function dbConnect(): Promise<Mongoose> {
-  if (cached.conn) return cached.conn;
+  if (globalCache.mongooseConn.conn) return globalCache.mongooseConn.conn;
 
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGO_URI, {
-      bufferCommands: false,
-      tls: true,
-    });
+  if (!globalCache.mongooseConn.promise) {
+    globalCache.mongooseConn.promise = mongoose
+      .connect(MONGO_URI, {
+        bufferCommands: false,
+      })
+      .catch((err) => {
+        console.error('❌ Mongoose connect error:', err);
+        throw err;
+      });
   }
 
-  cached.conn = await cached.promise;
-  global.mongoose = cached;
-  return cached.conn;
+  globalCache.mongooseConn.conn = await globalCache.mongooseConn.promise;
+  return globalCache.mongooseConn.conn;
 }
 
-export { clientPromise };
+// ✅ MongoClient for NextAuth
+const client = new MongoClient(MONGO_URI, {
+  tls: true,
+  serverSelectionTimeoutMS: 5000,
+});
+
+export const clientPromise =
+  globalCache._mongoClientPromise || (globalCache._mongoClientPromise = client.connect());
