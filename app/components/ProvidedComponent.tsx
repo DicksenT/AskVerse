@@ -53,7 +53,7 @@ export default function ProvidedComponent({children}: {children: React.ReactNode
             <Sidebar width={width}/>
             <main className={`h-full flex-1 flex flex-col items-center overflow-y-auto`}>
                 <section ref={scrollRef} className={`flex-1 overflow-y-auto max-h-screen ${width < 768 ? 'px-[5%]' : 'px-[10%]'} w-full`}>{children}</section>
-                {!scrollBottom && <button className="h-10 absolute w-10 rounded-full bg-background flex items-center justify-center bottom-32" onClick={scrollToBottom}><Image src={'/arrow-down-line.svg'} height={32} width={32} alt="scroll button"/></button>}
+                {!scrollBottom && <button className={`h-10 absolute w-10 rounded-full bg-background flex items-center justify-center ${width < 768 ?'bottom-16' : "bottom-32"}`} onClick={scrollToBottom}><Image src={'/arrow-down-line.svg'} height={32} width={32} alt="scroll button"/></button>}
                 <Input scrollToBottom={scrollToBottom}/>
             </main>
             </div>           
