@@ -15,11 +15,17 @@ interface sideBarProps{
 
 const Sidebar:React.FC<sideBarProps> = ({width}) =>{
    const {data: session} = useSession()
+   const [currentUser, setCurrentUser] = useState<string>('')
    const dispatch = useDispatch<AppDispatch>()
    const sidebarActive = useSelector((state: RootState) => state.state.activeMenu)
    const chats = useSelector((state: RootState) =>  Object.values(state.chats.chats))
    const [signOutOption, setSignOutOption] = useState<boolean>(false)
    const [confirmSignout, setConfirmSignout] = useState<boolean>(false)
+   useEffect(() =>{
+      if(session){
+         setCurrentUser(session.user.email.split('@')[0])
+      }
+   },[session])
 
  return(
       //background
@@ -59,7 +65,7 @@ const Sidebar:React.FC<sideBarProps> = ({width}) =>{
             </button>
             </Link>
             <div className="flex items-center px-3.5 py-2.5 justify-between relative">
-               {session?.user.email.split('@')[0]}
+               {currentUser}
                <button onClick={() => setSignOutOption(prevState => !prevState)}>
                   <Image src='/ellipsis.svg' alt="ellipsis button" width={20} height={20}/> 
                </button>
