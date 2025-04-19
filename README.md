@@ -22,7 +22,7 @@ A full-stack web app that lets users compare responses from multiple AI models (
 <p align="center">
   <img src="./public/landingPage.png" alt="Landing Page" width="80%"/>
   <br/>
-  <img src="./public/HomeChatPage.png" alt="Chat Home" width="80%"/>
+  <img src="./public/homeChatPage.png" alt="Chat Home" width="80%"/>
   <br/>
   <img src="./public/chatCompare.png" alt="Chat Comparison" width="80%"/>
   <br/>
