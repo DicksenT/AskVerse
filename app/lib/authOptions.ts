@@ -9,7 +9,19 @@ import { addPassword, addUser } from "../../backend/controllers/userController";
 import { clientPromise, dbConnect } from "./dbConnect";
 import User from "../../backend/models/userModel";
 
-
+const attempts = new Map()
+function tooManyAttempt(email: string){
+    const now = Date.now()
+    const record = attempts.get(email) || {count: 0, last: now}
+    if(now - record.last > 60.00){
+        attempts.set(email, {count: 1, last: now})
+        return false
+    }
+    record.count += 1
+    record.last = now
+    attempts.set(email, record)
+    return record.count > 5
+}
 export const authOptions: AuthOptions ={
     adapter: MongoDBAdapter(clientPromise),
     providers:[
@@ -27,10 +39,15 @@ export const authOptions: AuthOptions ={
             async authorize(credentials){
                 await dbConnect()
 
-                const user = await User.findOne({email: credentials.email})
+                if(!credentials.email || !credentials.password) return null
+                const email = credentials.email.trim().toLowerCase()
+                const password = credentials.password
+                if(!email || password.length < 3) return null
+                if(tooManyAttempt(email)) return null
+                const user = await User.findOne({email})
                 if(user){
                     if(!user.password){
-                        const editedUser = await addPassword(credentials.email, credentials.password)
+                        const editedUser = await addPassword(email, credentials.password)
          
                         if(!editedUser) return null
                         return{
@@ -46,7 +63,7 @@ export const authOptions: AuthOptions ={
                 }
                 }
                 else{
-                    const newUser = await addUser(credentials.email, credentials.password)
+                    const newUser = await addUser(email, credentials.password)
                     if(newUser){
                         return {id: newUser._id.toString(), email: newUser.email}
                     }
@@ -98,7 +115,18 @@ export const authOptions: AuthOptions ={
     pages:{
         signIn: '/login',
         error: '/login'
-    }
+    },
+    cookies: {
+    sessionToken: {
+    name: '__Secure-next-auth.session-token',
+    options: {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
+      secure: true
+    },
+  },
+},
 
     
 }
