@@ -13,7 +13,7 @@ const attempts = new Map()
 function tooManyAttempt(email: string){
     const now = Date.now()
     const record = attempts.get(email) || {count: 0, last: now}
-    if(now - record.last > 60.00){
+    if(now - record.last > 60_000){
         attempts.set(email, {count: 1, last: now})
         return false
     }
@@ -74,6 +74,9 @@ export const authOptions: AuthOptions ={
         })
     ],
     secret: process.env.NEXTAUTH_SECRET,
+    jwt:{
+        maxAge: 24 * 60 *60,
+    },
     callbacks:{
         async redirect({baseUrl}){
             return `${baseUrl}/agora`
