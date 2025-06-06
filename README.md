@@ -17,6 +17,16 @@ A full-stack web app that lets users compare responses from multiple AI models (
 - 📱 Fully responsive UI optimized for mobile and desktop
 
 ---
+
+## 🔐 Security Features
+- JWT session hardening via cookies
+- XSS prevention via markdown sanitizer
+- Login brute-force mitigation
+- ENV-based secret protection
+See [SECURITY.md](./SECURITY.md) for full audit
+
+---
+
 ## 📸 Preview
 
 <p align="center">
